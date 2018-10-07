@@ -18,7 +18,7 @@ dist: install
 	$(NODE) $(GULP) 
 
 build_image:  dist
-	docker build -t $(IMAGE)
+	docker build -t $(IMAGE) .
 
 tag_image: build_image
 	docker tag $(IMAGE)  $(IMAGE):$(TAG)

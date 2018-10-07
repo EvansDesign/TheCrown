@@ -1,5 +1,7 @@
 import gulp from 'gulp'
 import sass from 'gulp-sass'
+import copyAssets from 'gulp-css-copy-assets'
+
 import stripCssComments from 'gulp-strip-css-comments'
 import removeEmptyLines from 'gulp-remove-empty-lines'
 import minify from 'gulp-minify'
@@ -10,6 +12,9 @@ import htmlreplace from 'gulp-html-replace'
 import htmlmin from 'gulp-htmlmin'
 import del from 'del'
 const browserSync = require('browser-sync').create()
+const cssmin = require('gulp-cssmin')
+const rename=require('gulp-rename')
+
 
 gulp.task('clean', () =>
           del('dist'))
@@ -29,10 +34,13 @@ gulp.task('docker-imagemin',() =>
     .pipe(imagemin())
     .pipe(gulp.dest('dist/images')))
 
+gulp.task('docker-css',() =>
+          gulp.src('src/**/*.css')
+          .pipe(gulp.dest('dist')))
+
 gulp.task('docker-copy', () => 
           gulp.src('src/*.html')
           .pipe(htmlreplace({
-              'css': 'src/css/main.css',
               'js': {src:'js/site.min.js',
                      tpl: '<script src="%s" async></script>'}}))
           .pipe(htmlmin({collapseWhitespace: true}))
@@ -40,6 +48,7 @@ gulp.task('docker-copy', () =>
 
 gulp.task('docker-build',gulp.series(
     'docker-minify',
+    'docker-css',
     'docker-imagemin',
     'docker-copy'))
 
