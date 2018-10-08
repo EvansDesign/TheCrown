@@ -17,7 +17,7 @@ install: login
 dist: install
 	$(NODE) $(GULP) 
 
-build_image:  dist
+build_image:  ##dist
 	docker build -t $(IMAGE) .
 
 tag_image: build_image
